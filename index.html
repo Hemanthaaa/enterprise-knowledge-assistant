@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Knowledge Assistant - Document Upload</title>
+    <title>Enterprise Knowledge Base - Document Upload</title>
     <style>
         * {
             margin: 0;
@@ -43,13 +43,13 @@
         }
 
         .upload-area {
-            border: 2px dashed #667eea;
+            border: 3px dashed #667eea;
             border-radius: 12px;
-            padding: 40px;
+            padding: 60px 20px;
             text-align: center;
-            background: #f8f9ff;
-            transition: all 0.3s ease;
             cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9ff;
             margin-bottom: 20px;
         }
 
@@ -71,221 +71,187 @@
 
         .upload-text {
             color: #667eea;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
             margin-bottom: 8px;
         }
 
         .upload-hint {
             color: #999;
-            font-size: 13px;
+            font-size: 14px;
         }
 
-        input[type="file"] {
+        #fileInput {
             display: none;
+        }
+
+        .file-list {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .file-info {
-            background: #f8f9ff;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            display: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
         }
 
-        .file-info.show {
-            display: block;
+        .file-icon {
+            font-size: 24px;
+        }
+
+        .file-details {
+            flex: 1;
         }
 
         .file-name {
-            color: #333;
             font-weight: 600;
-            margin-bottom: 5px;
+            color: #333;
+            margin-bottom: 4px;
         }
 
         .file-size {
-            color: #666;
-            font-size: 13px;
+            font-size: 12px;
+            color: #999;
         }
 
-        .btn {
+        .remove-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .remove-btn:hover {
+            background: #ff3838;
+        }
+
+        .upload-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 14px 32px;
             border-radius: 8px;
+            padding: 16px 32px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             width: 100%;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
         }
 
-        .btn:hover {
+        .upload-btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
         }
 
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .btn:disabled {
-            background: #ccc;
+        .upload-btn:disabled {
+            opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
         }
 
-        .status {
+        .status-message {
             margin-top: 20px;
             padding: 15px;
             border-radius: 8px;
+            font-size: 14px;
             display: none;
-            animation: slideIn 0.3s ease;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .status.show {
-            display: block;
-        }
-
-        .status.success {
+        .status-message.success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
+            display: block;
         }
 
-        .status.error {
+        .status-message.error {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
+            display: block;
         }
 
-        .status.loading {
+        .status-message.info {
             background: #d1ecf1;
             color: #0c5460;
             border: 1px solid #bee5eb;
+            display: block;
         }
 
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #0c5460;
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 10px;
+            display: none;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .links {
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 1px solid #eee;
-        }
-
-        .links h3 {
-            color: #333;
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-
-        .link-item {
-            background: #f8f9ff;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .link-label {
-            color: #666;
-            font-size: 12px;
-            margin-bottom: 5px;
-        }
-
-        .link-url {
-            color: #667eea;
-            font-size: 13px;
-            word-break: break-all;
-            text-decoration: none;
-        }
-
-        .link-url:hover {
-            text-decoration: underline;
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📚 Enterprise Knowledge Assistant</h1>
-        <p class="subtitle">Upload PDF documents to build your knowledge base</p>
+        <h1>📚 Knowledge Base Upload</h1>
+        <p class="subtitle">Upload PDF documents to the enterprise knowledge base</p>
 
         <div class="upload-area" id="uploadArea">
             <div class="upload-icon">📄</div>
-            <div class="upload-text">Click to upload or drag and drop</div>
-            <div class="upload-hint">PDF files only</div>
+            <div class="upload-text">Click to browse or drag & drop PDFs here</div>
+            <div class="upload-hint">Supports PDF files up to 50MB</div>
         </div>
 
-        <input type="file" id="fileInput" accept=".pdf" />
+        <input type="file" id="fileInput" accept=".pdf" multiple>
 
-        <div class="file-info" id="fileInfo">
-            <div class="file-name" id="fileName"></div>
-            <div class="file-size" id="fileSize"></div>
+        <div class="file-list" id="fileList"></div>
+
+        <button class="upload-btn" id="uploadBtn" disabled>Upload Documents</button>
+
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
         </div>
 
-        <button class="btn" id="uploadBtn" disabled>Upload Document</button>
-
-        <div class="status" id="status"></div>
-
-        <div class="links">
-            <h3>🔗 Quick Links</h3>
-            <div class="link-item">
-                <div class="link-label">Chat Interface</div>
-                <a href="https://coastalaihub.app.n8n.cloud/webhook/ee3246a7-88a9-41e6-b451-229f17db0871/chat" class="link-url" target="_blank">
-                    Open Chat Assistant →
-                </a>
-            </div>
-            <div class="link-item">
-                <div class="link-label">API Endpoint</div>
-                <div class="link-url">POST https://coastalaihub.app.n8n.cloud/webhook/ask</div>
-            </div>
-        </div>
+        <div class="status-message" id="statusMessage"></div>
     </div>
 
     <script>
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
-        const fileInfo = document.getElementById('fileInfo');
-        const fileName = document.getElementById('fileName');
-        const fileSize = document.getElementById('fileSize');
+        const fileList = document.getElementById('fileList');
         const uploadBtn = document.getElementById('uploadBtn');
-        const status = document.getElementById('status');
+        const statusMessage = document.getElementById('statusMessage');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
 
-        let selectedFile = null;
+        let selectedFiles = [];
 
-        // Click to upload
-        uploadArea.addEventListener('click', () => {
-            fileInput.click();
-        });
+        // Click to browse
+        uploadArea.addEventListener('click', () => fileInput.click());
 
-        // File selection
+        // File input change
         fileInput.addEventListener('change', (e) => {
-            handleFile(e.target.files[0]);
+            handleFiles(e.target.files);
         });
 
         // Drag and drop
@@ -301,23 +267,48 @@
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.classList.remove('dragover');
-            handleFile(e.dataTransfer.files[0]);
+            handleFiles(e.dataTransfer.files);
         });
 
-        function handleFile(file) {
-            if (!file) return;
-
-            if (file.type !== 'application/pdf') {
-                showStatus('error', 'Please select a PDF file');
+        function handleFiles(files) {
+            const pdfFiles = Array.from(files).filter(file => file.type === 'application/pdf');
+            
+            if (pdfFiles.length === 0) {
+                showStatus('Please select PDF files only', 'error');
                 return;
             }
 
-            selectedFile = file;
-            fileName.textContent = file.name;
-            fileSize.textContent = formatFileSize(file.size);
-            fileInfo.classList.add('show');
+            selectedFiles = [...selectedFiles, ...pdfFiles];
+            renderFileList();
             uploadBtn.disabled = false;
-            status.classList.remove('show');
+            hideStatus();
+        }
+
+        function renderFileList() {
+            fileList.innerHTML = '';
+            selectedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-info">
+                        <div class="file-icon">📄</div>
+                        <div class="file-details">
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-size">${formatFileSize(file.size)}</div>
+                        </div>
+                    </div>
+                    <button class="remove-btn" onclick="removeFile(${index})">Remove</button>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            renderFileList();
+            if (selectedFiles.length === 0) {
+                uploadBtn.disabled = true;
+            }
         }
 
         function formatFileSize(bytes) {
@@ -328,46 +319,75 @@
             return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
         }
 
-        uploadBtn.addEventListener('click', async () => {
-            if (!selectedFile) return;
-
-            const formData = new FormData();
-            formData.append('data', selectedFile);
+        async function uploadFiles() {
+            if (selectedFiles.length === 0) return;
 
             uploadBtn.disabled = true;
-            showStatus('loading', '<span class="spinner"></span>Uploading and indexing document...');
+            progressBar.style.display = 'block';
+            showStatus('Uploading documents...', 'info');
 
-            try {
-                const response = await fetch('https://coastalaihub.app.n8n.cloud/webhook/upload-documents', {
-                    method: 'POST',
-                    body: formData
-                });
+            let successCount = 0;
+            let errorCount = 0;
 
-                const result = await response.json();
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const file = selectedFiles[i];
+                const progress = ((i + 1) / selectedFiles.length) * 100;
+                progressFill.style.width = progress + '%';
 
-                if (response.ok) {
-                    showStatus('success', '✓ ' + result.message + ' You can now ask questions about this document!');
-                    // Reset form
-                    setTimeout(() => {
-                        selectedFile = null;
-                        fileInput.value = '';
-                        fileInfo.classList.remove('show');
-                        uploadBtn.disabled = true;
-                    }, 2000);
-                } else {
-                    showStatus('error', '✗ Upload failed: ' + (result.message || 'Unknown error'));
-                    uploadBtn.disabled = false;
+                try {
+                    const formData = new FormData();
+                    formData.append('data', file);
+
+                    const response = await fetch('https://coastalaihub.app.n8n.cloud/webhook/upload-documents', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'Authorization': 'Basic ' + btoa('newsletter:newsletter')
+                        }
+                    });
+
+                    if (response.ok) {
+                        successCount++;
+                    } else {
+                        errorCount++;
+                        console.error(`Failed to upload ${file.name}:`, await response.text());
+                    }
+                } catch (error) {
+                    errorCount++;
+                    console.error(`Error uploading ${file.name}:`, error);
                 }
-            } catch (error) {
-                showStatus('error', '✗ Upload failed: ' + error.message);
-                uploadBtn.disabled = false;
             }
-        });
 
-        function showStatus(type, message) {
-            status.className = 'status show ' + type;
-            status.innerHTML = message;
+            progressFill.style.width = '100%';
+
+            if (errorCount === 0) {
+                showStatus(`✅ Successfully uploaded ${successCount} document(s)!`, 'success');
+                selectedFiles = [];
+                renderFileList();
+                fileInput.value = '';
+            } else if (successCount === 0) {
+                showStatus(`❌ Failed to upload all documents. Please try again.`, 'error');
+            } else {
+                showStatus(`⚠️ Uploaded ${successCount} document(s), ${errorCount} failed.`, 'error');
+            }
+
+            setTimeout(() => {
+                progressBar.style.display = 'none';
+                progressFill.style.width = '0%';
+                uploadBtn.disabled = selectedFiles.length === 0;
+            }, 2000);
         }
+
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message ${type}`;
+        }
+
+        function hideStatus() {
+            statusMessage.className = 'status-message';
+        }
+
+        uploadBtn.addEventListener('click', uploadFiles);
     </script>
 </body>
 </html>
